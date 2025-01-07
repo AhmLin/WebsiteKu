@@ -167,7 +167,7 @@ body {
         margin-top: 20px;
         text-align: center;
         width: auto;
-        margin-right: 80px;
+        align-item: center;
     }
 
     .image h3 {
