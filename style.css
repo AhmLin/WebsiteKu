@@ -166,9 +166,9 @@ body {
         transform: scale(0.7);
         margin-top: 20px;
         text-align: center;
-        width: auto;
+        width: 100%;
         align-item: center;
-        margin-left: -80px;
+        margin-left: -60px;
     }
 
     .image h3 {
