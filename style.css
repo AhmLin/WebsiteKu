@@ -167,7 +167,7 @@ body {
         margin-top: 20px;
         text-align: center;
         width: auto;
-        margin-right: 40px;
+        margin-right: 60px;
     }
 
     .image h3 {
@@ -186,7 +186,7 @@ body {
     }
 
     .other {
-        margin-right: 80px;
+        margin-right: 70px;
     }
 
     .experience {
@@ -197,7 +197,7 @@ body {
 
     .experience h4 {
         text-align: center;
-        margin-left: 90px;
+        margin-left: 80px;
     }
 
     .experience hr {
@@ -205,7 +205,7 @@ body {
     }
 
     .more {
-        margin-left: 90px;
+        margin-left: 80px;
         margin-bottom: 50px;
     }
 
