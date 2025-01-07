@@ -166,7 +166,8 @@ body {
         transform: scale(0.7);
         margin-top: 20px;
         text-align: center;
-        margin-left: 140px;
+        width: auto;
+        margin-right: 40px;
     }
 
     .image h3 {
@@ -180,15 +181,32 @@ body {
         margin-top: -69px;
         height: auto;
         padding-bottom: 20px;
+        margin-left: -20px;
+        margin-right: -20px;
+    }
+
+    .other {
+        margin-right: 80px;
     }
 
     .experience {
         display: flex;
         flex-direction: column;
+        margin-top: 40px;
+    }
+
+    .experience h4 {
+        text-align: center;
+        margin-left: 90px;
     }
 
     .experience hr {
         display: none;
+    }
+
+    .more {
+        margin-left: 90px;
+        margin-bottom: 50px;
     }
 
     .call {
