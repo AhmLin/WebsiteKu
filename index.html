@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator dengan Live Preview</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
@@ -12,7 +15,8 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* FONT: Diubah menjadi Poppins */
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
@@ -145,14 +149,17 @@
             margin-bottom: 20px;
             text-align: center;
         }
-
-        canvas {
+        
+        /* Penting: Batasi ukuran tampilan canvas di layar */
+        #qrcode canvas {
             max-width: 100%;
-            height: auto;
+            width: 280px; 
+            height: 280px;
         }
 
         .qr-text {
-            margin-top: 15px;
+            /* Teks di bawah QR: Jarak diperkecil menjadi 5px */
+            margin-top: 5px; 
             text-align: center;
             font-size: 18px;
             color: #333;
@@ -169,7 +176,6 @@
         .logo-preview img {
             max-width: 100px;
             max-height: 100px;
-            /* Penyesuaian CSS untuk pratinjau logo */
             border-radius: 12px; 
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
@@ -485,8 +491,8 @@
                 
                 // Konfigurasi dasar QR code
                 const config = {
-                    width: 280,
-                    height: 280,
+                    width: 500,  // Kualitas: Ditingkatkan menjadi 500px untuk logo yang lebih jelas
+                    height: 500, // Kualitas: Ditingkatkan menjadi 500px untuk logo yang lebih jelas
                     data: inputText,
                     margin: 10,
                     qrOptions: {
@@ -496,10 +502,10 @@
                     },
                     imageOptions: {
                         hideBackgroundDots: true,
-                        imageSize: 0.35, // LOGO: Ditingkatkan ukurannya (35%)
+                        imageSize: 0.35, // Ukuran logo 35%
                         margin: 5,
                         imageCrossOrigin: 'anonymous', 
-                        borderRadius: 20 // LOGO: Ditambahkan border radius 20px
+                        borderRadius: 20 // Border radius 20px
                     },
                     dotsOptions: {
                         color: selectedColor,
@@ -578,6 +584,7 @@
             // Download QR code
             downloadBtn.addEventListener('click', function() {
                 if (qrCodeInstance) {
+                    // Download dengan resolusi tinggi (500x500)
                     qrCodeInstance.download({ 
                         name: "qrcode-custom", 
                         extension: "png" 
