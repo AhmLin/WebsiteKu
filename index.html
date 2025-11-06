@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator dengan Live Preview</title>
+    <title>QR Code Generator dengan Custom Color & Gradient</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -114,7 +114,7 @@
             font-size: 14px;
         }
 
-        input[type="text"], input[type="file"], select, textarea {
+        input[type="text"], input[type="file"], select, textarea, input[type="color"] {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -124,7 +124,7 @@
             -webkit-appearance: none;
         }
 
-        input[type="text"]:focus, select:focus, textarea:focus {
+        input[type="text"]:focus, select:focus, textarea:focus, input[type="color"]:focus {
             border-color: #2c5aa0;
             outline: none;
         }
@@ -132,6 +132,12 @@
         textarea {
             resize: vertical;
             min-height: 70px;
+        }
+
+        input[type="color"] {
+            height: 50px;
+            padding: 5px;
+            cursor: pointer;
         }
 
         .btn {
@@ -156,6 +162,13 @@
         .btn-download {
             background-color: #2c5aa0;
             margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 14px;
+            margin-top: 5px;
+            width: auto;
         }
 
         .logo-preview {
@@ -225,6 +238,80 @@
         .color-option.selected {
             border-color: #333;
             transform: scale(1.1);
+        }
+
+        .color-custom-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .color-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .color-input-group label {
+            min-width: 80px;
+            margin-bottom: 0;
+        }
+
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            background: #000000;
+        }
+
+        .gradient-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .gradient-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gradient-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .gradient-type {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .gradient-type.selected {
+            border-color: #2c5aa0;
+            background-color: #e8f4ff;
+        }
+
+        .gradient-preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            margin-top: 10px;
+            background: linear-gradient(90deg, #000000, #2c5aa0);
         }
 
         .instructions {
@@ -314,6 +401,10 @@
             .description {
                 font-size: 15px;
             }
+
+            .gradient-controls {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         @media (min-width: 1024px) {
@@ -334,11 +425,11 @@
 
         /* Touch device optimizations */
         @media (hover: none) {
-            .btn:hover, .style-option:hover, .color-option:hover {
+            .btn:hover, .style-option:hover, .color-option:hover, .gradient-type:hover {
                 transform: none;
             }
             
-            .style-option:active, .color-option:active {
+            .style-option:active, .color-option:active, .gradient-type:active {
                 transform: scale(0.98);
             }
         }
@@ -354,8 +445,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>QR Code Generator dengan Live Preview</h1>
-            <p class="description">Buat QR code dengan style kustom dan lihat hasilnya secara real-time</p>
+            <h1>QR Code Generator dengan Custom Color & Gradient</h1>
+            <p class="description">Buat QR code dengan warna kustom, gradient, dan lihat hasilnya secara real-time</p>
         </header>
 
         <div class="main-content">
@@ -414,6 +505,41 @@
                         <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
                     </div>
                 </div>
+
+                <!-- Custom Color Section -->
+                <div class="color-custom-section">
+                    <h4>Warna Kustom</h4>
+                    <div class="color-input-group">
+                        <label for="custom-color">Pilih Warna:</label>
+                        <input type="color" id="custom-color" value="#000000">
+                        <div class="color-preview" id="color-preview"></div>
+                    </div>
+                    <button id="apply-custom-color" class="btn btn-small">Terapkan Warna Kustom</button>
+                </div>
+
+                <!-- Gradient Section -->
+                <div class="gradient-section">
+                    <h4>Gradient</h4>
+                    <div class="gradient-type-selector">
+                        <div class="gradient-type" data-type="linear">Linear</div>
+                        <div class="gradient-type" data-type="radial">Radial</div>
+                    </div>
+                    
+                    <div class="gradient-controls">
+                        <div>
+                            <label for="gradient-color1">Warna 1:</label>
+                            <input type="color" id="gradient-color1" value="#000000">
+                        </div>
+                        <div>
+                            <label for="gradient-color2">Warna 2:</label>
+                            <input type="color" id="gradient-color2" value="#2c5aa0">
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-preview" id="gradient-preview"></div>
+                    <button id="apply-gradient" class="btn btn-small">Terapkan Gradient</button>
+                    <button id="remove-gradient" class="btn btn-small" style="background-color: #6c757d; margin-top: 5px;">Hapus Gradient</button>
+                </div>
             </div>
 
             <div class="preview-section">
@@ -434,6 +560,7 @@
                     <li>Masukkan URL atau teks untuk melihat QR code secara real-time</li>
                     <li>Tambahkan teks kustom yang akan muncul di bawah QR code</li>
                     <li>Pilih style dan warna QR code sesuai keinginan</li>
+                    <li>Gunakan warna kustom atau gradient untuk desain yang unik</li>
                     <li>Unggah logo untuk menambahkannya di tengah QR code</li>
                     <li>Gunakan tombol "Download QR Code" untuk menyimpan hasilnya</li>
                 </ul>
@@ -457,10 +584,21 @@
             const previewImage = document.getElementById('preview-image');
             const styleOptions = document.querySelectorAll('.style-option');
             const colorOptions = document.querySelectorAll('.color-option');
+            const customColorInput = document.getElementById('custom-color');
+            const colorPreview = document.getElementById('color-preview');
+            const applyCustomColorBtn = document.getElementById('apply-custom-color');
+            const gradientTypeOptions = document.querySelectorAll('.gradient-type');
+            const gradientColor1 = document.getElementById('gradient-color1');
+            const gradientColor2 = document.getElementById('gradient-color2');
+            const gradientPreview = document.getElementById('gradient-preview');
+            const applyGradientBtn = document.getElementById('apply-gradient');
+            const removeGradientBtn = document.getElementById('remove-gradient');
             
             let logoImage = null;
             let selectedStyle = 'square';
             let selectedColor = '#000000';
+            let selectedGradientType = 'linear';
+            let isUsingGradient = false;
             let qrCodeInstance = null;
             let updateTimeout = null;
             
@@ -480,12 +618,65 @@
                     colorOptions.forEach(opt => opt.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedColor = this.getAttribute('data-color');
+                    isUsingGradient = false;
                     updateQRCode();
                 });
             });
             
-            // Set default selected style
+            // Inisialisasi gradient type options
+            gradientTypeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    gradientTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedGradientType = this.getAttribute('data-type');
+                    updateGradientPreview();
+                });
+            });
+            
+            // Set default selected style dan gradient type
             document.querySelector('.style-option[data-type="square"]').classList.add('selected');
+            document.querySelector('.gradient-type[data-type="linear"]').classList.add('selected');
+            
+            // Update color preview
+            customColorInput.addEventListener('input', function() {
+                colorPreview.style.backgroundColor = this.value;
+            });
+            
+            // Apply custom color
+            applyCustomColorBtn.addEventListener('click', function() {
+                selectedColor = customColorInput.value;
+                isUsingGradient = false;
+                // Update selected color in preset options
+                colorOptions.forEach(opt => opt.classList.remove('selected'));
+                updateQRCode();
+            });
+            
+            // Update gradient preview
+            function updateGradientPreview() {
+                const color1 = gradientColor1.value;
+                const color2 = gradientColor2.value;
+                
+                if (selectedGradientType === 'linear') {
+                    gradientPreview.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
+                } else {
+                    gradientPreview.style.background = `radial-gradient(circle, ${color1}, ${color2})`;
+                }
+            }
+            
+            gradientColor1.addEventListener('input', updateGradientPreview);
+            gradientColor2.addEventListener('input', updateGradientPreview);
+            
+            // Apply gradient
+            applyGradientBtn.addEventListener('click', function() {
+                isUsingGradient = true;
+                updateQRCode();
+            });
+            
+            // Remove gradient
+            removeGradientBtn.addEventListener('click', function() {
+                isUsingGradient = false;
+                updateQRCode();
+            });
             
             // Handle input changes dengan debounce
             qrInput.addEventListener('input', function() {
@@ -586,6 +777,36 @@
                     }
                 };
                 
+                // Terapkan gradient jika dipilih
+                if (isUsingGradient) {
+                    const color1 = gradientColor1.value;
+                    const color2 = gradientColor2.value;
+                    
+                    if (selectedGradientType === 'linear') {
+                        config.dotsOptions.gradient = {
+                            type: 'linear',
+                            rotation: 0,
+                            colorStops: [
+                                { offset: 0, color: color1 },
+                                { offset: 1, color: color2 }
+                            ]
+                        };
+                    } else {
+                        config.dotsOptions.gradient = {
+                            type: 'radial',
+                            rotation: 0,
+                            colorStops: [
+                                { offset: 0, color: color1 },
+                                { offset: 1, color: color2 }
+                            ]
+                        };
+                    }
+                    
+                    // Juga terapkan ke corners
+                    config.cornersSquareOptions.gradient = config.dotsOptions.gradient;
+                    config.cornersDotOptions.gradient = config.dotsOptions.gradient;
+                }
+                
                 // Terapkan style yang dipilih
                 applyStyle(config, selectedStyle);
                 
@@ -660,6 +881,7 @@
             });
             
             // Inisialisasi awal
+            updateGradientPreview();
             updateQRText();
         });
     </script>
