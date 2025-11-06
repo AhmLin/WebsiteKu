@@ -1,646 +1,889 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator Kustom</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
-    <style>
-        /* CSS Styling */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator dengan Custom Color & Gradient</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 15px;
-            min-height: 100vh;
-        }
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 15px;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 20px;
-            margin-top: 10px;
-        }
+        .container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 20px;
+            margin-top: 10px;
+        }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
 
-        h1 {
-            color: #2c5aa0;
-            font-size: 24px; /* Disesuaikan untuk mobile */
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
+        h1 {
+            color: #2c5aa0;
+            font-size: 22px;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
 
-        .description {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.4;
-        }
+        .description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
 
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-        /* --- PREVIEW SECTION --- */
-        .preview-section {
-            order: 1; /* Pindah ke atas di Mobile */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border: 2px dashed #ddd;
-            border-radius: 12px;
-            background-color: #f9fafb;
-            min-height: 300px;
-        }
+        .input-section {
+            order: 2;
+        }
 
-        #qrcode {
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        /* Penting: Set ukuran *tampilan* QR code di layar */
-        #qrcode canvas {
-            max-width: 100%;
-            /* Tentukan lebar maksimal tampilan di layar */
-            width: 250px !important; 
-            height: 250px !important;
-            /* Resolusi render (500x500 di JS) akan di-scale down ke 250x250 visual,
-               menjaga kualitas tinggi saat di-download */
-        }
+        .preview-section {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            background-color: #f9fafb;
+            min-height: 300px;
+            margin-bottom: 10px;
+        }
 
-        .qr-text {
-            margin-top: 5px; /* Sedikit ke atas */
-            text-align: center;
-            font-size: 16px; 
-            font-weight: 600;
-            color: #333;
-            max-width: 250px;
-            word-wrap: break-word;
-        }
+        #qrcode {
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        #qrcode canvas {
+            max-width: 100%;
+            width: 220px !important;
+            height: 220px !important;
+        }
 
-        .btn-download {
-            background-color: #2c5aa0;
-            margin-top: 15px;
-            width: 100%;
-            padding: 14px 20px;
-            font-weight: 600;
-        }
+        .qr-text {
+            margin-top: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            max-width: 250px;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
 
-        /* --- INPUT SECTION --- */
-        .input-section {
-            order: 2; /* Pindah ke bawah di Mobile */
-        }
+        .input-group {
+            margin-bottom: 16px;
+        }
 
-        .input-group {
-            margin-bottom: 16px;
-        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #444;
+            font-size: 14px;
+        }
 
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #444;
-            font-size: 14px;
-        }
-        
-        input[type="text"], input[type="file"], textarea, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 15px;
-        }
-        
-        /* --- STYLE & COLOR CONTROLS --- */
-        .control-group-box {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
+        input[type="text"], input[type="file"], select, textarea, input[type="color"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            -webkit-appearance: none;
+        }
 
-        .style-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-top: 10px;
-        }
+        input[type="text"]:focus, select:focus, textarea:focus, input[type="color"]:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
 
-        .color-selector {
-            margin-top: 15px;
-        }
-        
-        .color-type-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        
-        .color-type-btn {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 13px;
-        }
-        
-        .color-type-btn.selected {
-            border-color: #2c5aa0;
-            background-color: #e8f4ff;
-        }
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
 
-        .color-options, .gradient-controls {
-            padding: 10px 0;
-        }
+        input[type="color"] {
+            height: 50px;
+            padding: 5px;
+            cursor: pointer;
+        }
 
-        .gradient-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        
-        .gradient-preview {
-            width: 100%;
-            height: 30px;
-            border-radius: 6px;
-            border: 2px solid #ddd;
-            margin-top: 10px;
-            background: linear-gradient(90deg, #000000, #2c5aa0);
-        }
+        .btn {
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+            width: 100%;
+            touch-action: manipulation;
+        }
 
-        /* Responsive Desktop */
-        @media (min-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
-            
-            .main-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 30px;
-            }
-            
-            .input-section {
-                order: 1; /* Pindah ke kiri di Desktop */
-            }
-            
-            .preview-section {
-                order: 2; /* Pindah ke kanan di Desktop */
-                min-height: 500px;
-            }
-            
-            #qrcode canvas {
-                width: 300px !important; /* Tampilan lebih besar di desktop */
-                height: 300px !important;
-            }
-            
-            .instructions, footer {
-                grid-column: 1 / -1;
-            }
-        }
-    </style>
+        .btn:hover {
+            background-color: #1e3d6f;
+        }
+
+        .btn-download {
+            background-color: #2c5aa0;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 8px 12px;
+            font-size: 14px;
+            margin-top: 5px;
+            width: auto;
+        }
+
+        .logo-preview {
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .logo-preview img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-preview p {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .style-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+            touch-action: manipulation;
+        }
+
+        .style-option:hover {
+            border-color: #2c5aa0;
+            background-color: #f0f5ff;
+        }
+
+        .style-option.selected {
+            border-color: #2c5aa0;
+            background-color: #e8f4ff;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            touch-action: manipulation;
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .color-custom-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .color-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .color-input-group label {
+            min-width: 80px;
+            margin-bottom: 0;
+        }
+
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            background: #000000;
+        }
+
+        .gradient-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .gradient-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .gradient-type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .gradient-type {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .gradient-type.selected {
+            border-color: #2c5aa0;
+            background-color: #e8f4ff;
+        }
+
+        .gradient-preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            border: 2px solid #ddd;
+            margin-top: 10px;
+            background: linear-gradient(90deg, #000000, #2c5aa0);
+        }
+
+        .instructions {
+            background-color: #e8f4ff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #2c5aa0;
+            order: 3;
+        }
+
+        .instructions h3 {
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .instructions ul {
+            padding-left: 18px;
+        }
+
+        .instructions li {
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            order: 4;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 30px 15px;
+        }
+
+        .empty-state i {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* Responsive improvements */
+        @media (min-width: 768px) {
+            .container {
+                padding: 25px;
+                margin-top: 15px;
+            }
+            
+            .main-content {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 25px;
+            }
+            
+            .input-section {
+                order: 1;
+            }
+            
+            .preview-section {
+                order: 2;
+                min-height: 400px;
+            }
+            
+            #qrcode canvas {
+                width: 280px !important;
+                height: 280px !important;
+            }
+            
+            .instructions, footer {
+                grid-column: 1 / -1;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .description {
+                font-size: 15px;
+            }
+
+            .gradient-controls {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1000px;
+                padding: 30px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            #qrcode canvas {
+                width: 300px !important;
+                height: 300px !important;
+            }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) {
+            .btn:hover, .style-option:hover, .color-option:hover, .gradient-type:hover {
+                transform: none;
+            }
+            
+            .style-option:active, .color-option:active, .gradient-type:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* iOS specific fixes */
+        @supports (-webkit-touch-callout: none) {
+            input, textarea, select {
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>🎨 QR Code Generator Kustom & Gradient</h1>
-            <p class="description">Buat QR code dengan style, warna kustom, gradient, dan logo. Lihat hasil **resolusi tinggi** secara *live*.</p>
-        </header>
+    <div class="container">
+        <header>
+            <h1>QR Code Generator dengan Custom Color & Gradient</h1>
+            <p class="description">Buat QR code dengan warna kustom, gradient, dan lihat hasilnya secara real-time</p>
+        </header>
 
-        <div class="main-content">
-            <div class="preview-section">
-                <div id="qrcode">
-                    <div class="empty-state">
-                        <i>✨</i>
-                        <p>QR Code akan muncul di sini</p>
-                        <p>Masukkan data di kolom sebelah</p>
-                    </div>
-                </div>
-                <div id="qr-text" class="qr-text" style="display: none;"></div>
-                <button id="download-btn" class="btn btn-download" style="display: none;">Download PNG Resolusi Tinggi</button>
-            </div>
+        <div class="main-content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="qr-input">Masukkan URL atau teks:</label>
+                    <input type="text" id="qr-input" placeholder="https://example.com atau teks apa saja">
+                </div>
 
-            <div class="input-section">
-                
-                <div class="input-group">
-                    <label for="qr-input">URL / Teks Data QR:</label>
-                    <input type="text" id="qr-input" placeholder="https://example.com atau teks apa saja">
-                </div>
+                <div class="input-group">
+                    <label for="text-input">Teks di bawah QR (opsional):</label>
+                    <textarea id="text-input" placeholder="Teks yang akan muncul di bawah QR code"></textarea>
+                </div>
 
-                <div class="input-group">
-                    <label for="text-input">Teks di bawah QR (Opsional):</label>
-                    <textarea id="text-input" placeholder="Teks caption untuk QR code"></textarea>
-                </div>
+                <div class="input-group">
+                    <label for="logo-upload">Unggah logo (opsional):</label>
+                    <input type="file" id="logo-upload" accept="image/*">
+                </div>
 
-                <div class="input-group">
-                    <label for="logo-upload">Unggah Logo Tengah (Opsional):</label>
-                    <input type="file" id="logo-upload" accept="image/*">
-                    <div class="logo-preview" id="logo-preview">
-                        <p>Logo terunggah:</p>
-                        <img id="preview-image" src="" alt="Logo Preview">
-                        <button id="remove-logo" class="btn btn-small" style="background-color: #dc3545;">Hapus Logo</button>
-                    </div>
-                </div>
+                <div class="logo-preview" id="logo-preview">
+                    <p>Logo yang akan digunakan:</p>
+                    <img id="preview-image" src="" alt="Logo Preview">
+                </div>
 
-                <div class="control-group-box">
-                    <label>Pilih Style Titik QR Code:</label>
-                    <div class="style-options">
-                        <div class="style-option" data-type="square"><div>Square</div></div>
-                        <div class="style-option" data-type="dots"><div>Dots</div></div>
-                        <div class="style-option" data-type="rounded"><div>Rounded</div></div>
-                        <div class="style-option" data-type="extra-rounded"><div>Extra Rounded</div></div>
-                        <div class="style-option" data-type="classy"><div>Classy</div></div>
-                        <div class="style-option" data-type="classy-rounded"><div>Classy Rounded</div></div>
-                    </div>
-                </div>
+                <div class="input-group">
+                    <label>Pilih Style QR Code:</label>
+                    <div class="style-options">
+                        <div class="style-option" data-type="square">
+                            <div>Square</div>
+                        </div>
+                        <div class="style-option" data-type="dots">
+                            <div>Dots</div>
+                        </div>
+                        <div class="style-option" data-type="rounded">
+                            <div>Rounded</div>
+                        </div>
+                        <div class="style-option" data-type="extra-rounded">
+                            <div>Extra Rounded</div>
+                        </div>
+                        <div class="style-option" data-type="classy">
+                            <div>Classy</div>
+                        </div>
+                        <div class="style-option" data-type="classy-rounded">
+                            <div>Classy Rounded</div>
+                        </div>
+                    </div>
+                </div>
 
-                <div class="control-group-box color-selector">
-                    <label>Warna QR Code:</label>
-                    <div class="color-type-selector">
-                        <div class="color-type-btn selected" data-mode="solid">Warna Solid</div>
-                        <div class="color-type-btn" data-mode="gradient">Gradient</div>
-                    </div>
-                    
-                    <div id="solid-color-controls">
-                        <div class="color-options">
-                            <div class="color-option selected" style="background-color: #000000;" data-color="#000000"></div>
-                            <div class="color-option" style="background-color: #2c5aa0;" data-color="#2c5aa0"></div>
-                            <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
-                            <div class="color-option" style="background-color: #27ae60;" data-color="#27ae60"></div>
-                            <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
-                        </div>
-                        <div style="margin-top: 15px;">
-                            <label for="custom-color" style="font-weight: 400; font-size: 13px;">Atau Pilih Warna Kustom:</label>
-                            <div class="color-input-group">
-                                <input type="color" id="custom-color" value="#000000" style="height: 40px; padding: 3px;">
-                                <div class="color-preview" id="color-preview" style="background: #000000;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="gradient-controls-wrapper" style="display: none;">
-                        <div class="gradient-type-selector">
-                            <div class="gradient-type selected" data-type="linear">Linear</div>
-                            <div class="gradient-type" data-type="radial">Radial</div>
-                        </div>
-                        <div class="gradient-controls">
-                            <div>
-                                <label for="gradient-color1" style="font-weight: 400; font-size: 13px;">Warna Awal:</label>
-                                <input type="color" id="gradient-color1" value="#000000" style="height: 40px; padding: 3px;">
-                            </div>
-                            <div>
-                                <label for="gradient-color2" style="font-weight: 400; font-size: 13px;">Warna Akhir:</label>
-                                <input type="color" id="gradient-color2" value="#2c5aa0" style="height: 40px; padding: 3px;">
-                            </div>
-                        </div>
-                        <div class="gradient-preview" id="gradient-preview"></div>
-                    </div>
-                </div>
+                <div class="input-group">
+                    <label>Warna QR Code:</label>
+                    <div class="color-options">
+                        <div class="color-option selected" style="background-color: #000000;" data-color="#000000"></div>
+                        <div class="color-option" style="background-color: #2c5aa0;" data-color="#2c5aa0"></div>
+                        <div class="color-option" style="background-color: #e74c3c;" data-color="#e74c3c"></div>
+                        <div class="color-option" style="background-color: #27ae60;" data-color="#27ae60"></div>
+                        <div class="color-option" style="background-color: #8e44ad;" data-color="#8e44ad"></div>
+                    </div>
+                </div>
 
-            </div>
+                <!-- Custom Color Section -->
+                <div class="color-custom-section">
+                    <h4>Warna Kustom</h4>
+                    <div class="color-input-group">
+                        <label for="custom-color">Pilih Warna:</label>
+                        <input type="color" id="custom-color" value="#000000">
+                        <div class="color-preview" id="color-preview"></div>
+                    </div>
+                    <button id="apply-custom-color" class="btn btn-small">Terapkan Warna Kustom</button>
+                </div>
 
-            <div class="instructions">
-                <h3>💡 Tips Desain QR Code:</h3>
-                <ul>
-                    <li>**Kualitas Tinggi:** QR Code di-*render* pada resolusi **500x500** untuk memastikan hasil *download* yang tajam.</li>
-                    <li>**Koreksi Error:** Level **H (High)** diaktifkan secara default untuk menjamin kode tetap terbaca meskipun ada logo atau warna kustom.</li>
-                    <li>**Kontras:** Pastikan warna QR Code Anda **kontras** dengan warna latar belakang (putih) agar mudah dipindai.</li>
-                </ul>
-            </div>
+                <!-- Gradient Section -->
+                <div class="gradient-section">
+                    <h4>Gradient</h4>
+                    <div class="gradient-type-selector">
+                        <div class="gradient-type" data-type="linear">Linear</div>
+                        <div class="gradient-type" data-type="radial">Radial</div>
+                    </div>
+                    
+                    <div class="gradient-controls">
+                        <div>
+                            <label for="gradient-color1">Warna 1:</label>
+                            <input type="color" id="gradient-color1" value="#000000">
+                        </div>
+                        <div>
+                            <label for="gradient-color2">Warna 2:</label>
+                            <input type="color" id="gradient-color2" value="#2c5aa0">
+                        </div>
+                    </div>
+                    
+                    <div class="gradient-preview" id="gradient-preview"></div>
+                    <button id="apply-gradient" class="btn btn-small">Terapkan Gradient</button>
+                    <button id="remove-gradient" class="btn btn-small" style="background-color: #6c757d; margin-top: 5px;">Hapus Gradient</button>
+                </div>
+            </div>
 
-            <footer>
-                <p>© 2023 QR Code Generator. Menggunakan library `qr-code-styling.js`.</p>
-            </footer>
-        </div>
-    </div>
+            <div class="preview-section">
+                <div id="qrcode">
+                    <div class="empty-state">
+                        <i>📱</i>
+                        <p>QR Code akan muncul di sini</p>
+                        <p>Masukkan teks atau URL untuk memulai</p>
+                    </div>
+                </div>
+                <div id="qr-text" class="qr-text"></div>
+                <button id="download-btn" class="btn btn-download">Download QR Code</button>
+            </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const qrInput = document.getElementById('qr-input');
-            const textInput = document.getElementById('text-input');
-            const logoUpload = document.getElementById('logo-upload');
-            const removeLogoBtn = document.getElementById('remove-logo');
-            const downloadBtn = document.getElementById('download-btn');
-            const qrcodeDiv = document.getElementById('qrcode');
-            const qrTextDiv = document.getElementById('qr-text');
-            const logoPreview = document.getElementById('logo-preview');
-            const previewImage = document.getElementById('preview-image');
-            const styleOptions = document.querySelectorAll('.style-option');
-            const colorTypeBtns = document.querySelectorAll('.color-type-btn');
-            const solidColorControls = document.getElementById('solid-color-controls');
-            const gradientControlsWrapper = document.getElementById('gradient-controls-wrapper');
-            const colorOptions = document.querySelectorAll('.color-option');
-            const customColorInput = document.getElementById('custom-color');
-            const colorPreview = document.getElementById('color-preview');
-            const gradientTypeOptions = document.querySelectorAll('#gradient-controls-wrapper .gradient-type');
-            const gradientColor1 = document.getElementById('gradient-color1');
-            const gradientColor2 = document.getElementById('gradient-color2');
-            const gradientPreview = document.getElementById('gradient-preview');
-            
-            let logoImage = null;
-            let selectedStyle = 'square';
-            let selectedColor = '#000000';
-            let selectedColorMode = 'solid';
-            let selectedGradientType = 'linear';
-            let qrCodeInstance = null;
-            let updateTimeout = null;
+            <div class="instructions">
+                <h3>Petunjuk Penggunaan:</h3>
+                <ul>
+                    <li>Masukkan URL atau teks untuk melihat QR code secara real-time</li>
+                    <li>Tambahkan teks kustom yang akan muncul di bawah QR code</li>
+                    <li>Pilih style dan warna QR code sesuai keinginan</li>
+                    <li>Gunakan warna kustom atau gradient untuk desain yang unik</li>
+                    <li>Unggah logo untuk menambahkannya di tengah QR code</li>
+                    <li>Gunakan tombol "Download QR Code" untuk menyimpan hasilnya</li>
+                </ul>
+            </div>
 
-            // --- Handlers UI ---
+            <footer>
+                <p>© 2023 QR Code Generator. Semua proses berjalan di browser Anda.</p>
+            </footer>
+        </div>
+    </div>
 
-            // Set default selected
-            document.querySelector('.style-option[data-type="square"]').classList.add('selected');
-            document.querySelector('.gradient-type[data-type="linear"]').classList.add('selected');
-
-            // Style Options
-            styleOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    styleOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedStyle = this.getAttribute('data-type');
-                    updateQRCode();
-                });
-            });
-
-            // Color Type Switch (Solid/Gradient)
-            colorTypeBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    colorTypeBtns.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedColorMode = this.getAttribute('data-mode');
-                    if (selectedColorMode === 'solid') {
-                        solidColorControls.style.display = 'block';
-                        gradientControlsWrapper.style.display = 'none';
-                        updateQRCode();
-                    } else {
-                        solidColorControls.style.display = 'none';
-                        gradientControlsWrapper.style.display = 'block';
-                        updateQRCode();
-                    }
-                });
-            });
-            
-            // Preset Color Options
-            colorOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    colorOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedColor = this.getAttribute('data-color');
-                    customColorInput.value = selectedColor; // Update custom input
-                    colorPreview.style.backgroundColor = selectedColor;
-                    updateQRCode();
-                });
-            });
-
-            // Custom Color Input
-            customColorInput.addEventListener('input', function() {
-                selectedColor = this.value;
-                colorPreview.style.backgroundColor = selectedColor;
-                colorOptions.forEach(opt => opt.classList.remove('selected')); // Deselect presets
-                updateQRCode();
-            });
-
-            // Gradient Type Options
-            gradientTypeOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    gradientTypeOptions.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedGradientType = this.getAttribute('data-type');
-                    updateGradientPreview();
-                    updateQRCode();
-                });
-            });
-            
-            // Gradient Color Inputs
-            gradientColor1.addEventListener('input', function() {
-                updateGradientPreview();
-                updateQRCode();
-            });
-            gradientColor2.addEventListener('input', function() {
-                updateGradientPreview();
-                updateQRCode();
-            });
-            
-            // Logo Upload
-            logoUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        logoImage = new Image();
-                        logoImage.src = event.target.result;
-                        previewImage.src = event.target.result;
-                        logoPreview.style.display = 'flex';
-                        logoPreview.style.flexDirection = 'column';
-                        logoPreview.style.alignItems = 'center';
-                        updateQRCode();
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Remove Logo Button
-            removeLogoBtn.addEventListener('click', function() {
-                logoImage = null;
-                logoUpload.value = ''; // Reset file input
-                logoPreview.style.display = 'none';
-                updateQRCode();
-            });
-
-            // --- Core Functions ---
-
-            // Update Gradient Preview
-            function updateGradientPreview() {
-                const color1 = gradientColor1.value;
-                const color2 = gradientColor2.value;
-                
-                if (selectedGradientType === 'linear') {
-                    // Linear: Default 90deg (horizontal)
-                    gradientPreview.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
-                } else {
-                    // Radial: Default center
-                    gradientPreview.style.background = `radial-gradient(circle, ${color1}, ${color2})`;
-                }
-            }
-            
-            // Debounced Input Handler
-            qrInput.addEventListener('input', function() {
-                clearTimeout(updateTimeout);
-                updateTimeout = setTimeout(updateQRCode, 500);
-            });
-            
-            textInput.addEventListener('input', function() {
-                updateQRText();
-            });
-
-            // Update QR code text display
-            function updateQRText() {
-                const text = textInput.value.trim();
-                if (text) {
-                    qrTextDiv.textContent = text;
-                    qrTextDiv.style.display = 'block';
-                } else {
-                    qrTextDiv.style.display = 'none';
-                }
-            }
-            
-            // Main QR Code Rendering Function
-            function updateQRCode() {
-                const inputText = qrInput.value.trim();
-                
-                if (!inputText) {
-                    qrcodeDiv.innerHTML = `
-                        <div class="empty-state">
-                            <i>✨</i>
-                            <p>QR Code akan muncul di sini</p>
-                            <p>Masukkan data di kolom sebelah</p>
-                        </div>
-                    `;
-                    downloadBtn.style.display = 'none';
-                    return;
-                }
-                
-                qrcodeDiv.innerHTML = '';
-                
-                // RENDER RESOLUTION: Selalu gunakan 500x500 untuk kualitas download tinggi
-                const qrRenderSize = 500; 
-                
-                const config = {
-                    width: qrRenderSize,
-                    height: qrRenderSize,
-                    data: inputText,
-                    margin: 10,
-                    qrOptions: {
-                        errorCorrectionLevel: 'H' // High
-                    },
-                    imageOptions: {
-                        hideBackgroundDots: true,
-                        imageSize: 0.3, // Logo size 30%
-                        margin: 5,
-                        imageCrossOrigin: 'anonymous',
-                        borderRadius: 15
-                    },
-                    dotsOptions: {
-                        color: selectedColor,
-                        type: 'square',
-                        gradient: null // Reset gradient
-                    },
-                    backgroundOptions: {
-                        color: '#ffffff'
-                    },
-                    cornersSquareOptions: {
-                        color: selectedColor,
-                        type: 'square',
-                        gradient: null // Reset gradient
-                    },
-                    cornersDotOptions: {
-                        color: selectedColor,
-                        type: 'square',
-                        gradient: null // Reset gradient
-                    }
-                };
-                
-                // Apply Gradient if selected
-                if (selectedColorMode === 'gradient') {
-                    const color1 = gradientColor1.value;
-                    const color2 = gradientColor2.value;
-                    
-                    const gradientConfig = {
-                        type: selectedGradientType,
-                        rotation: 0, 
-                        colorStops: [
-                            { offset: 0, color: color1 },
-                            { offset: 1, color: color2 }
-                        ]
-                    };
-                    
-                    config.dotsOptions.gradient = gradientConfig;
-                    config.cornersSquareOptions.gradient = gradientConfig;
-                    config.cornersDotOptions.gradient = gradientConfig;
-                    // Hapus warna solid agar gradient bekerja
-                    config.dotsOptions.color = null; 
-                    config.cornersSquareOptions.color = null; 
-                    config.cornersDotOptions.color = null;
-                } else {
-                    // Pastikan warna solid digunakan
-                    config.dotsOptions.color = selectedColor;
-                    config.cornersSquareOptions.color = selectedColor;
-                    config.cornersDotOptions.color = selectedColor;
-                }
-
-                // Apply Style
-                applyStyle(config, selectedStyle);
-                
-                // Add Logo
-                if (logoImage) {
-                    config.image = logoImage.src;
-                }
-                
-                qrCodeInstance = new QRCodeStyling(config);
-                qrCodeInstance.append(qrcodeDiv);
-                
-                downloadBtn.style.display = 'block';
-                updateQRText();
-            }
-            
-            // Helper: Apply Style Configuration
-            function applyStyle(config, style) {
-                // Konfigurasi untuk dotsOptions, cornersSquareOptions, dan cornersDotOptions
-                const types = {
-                    'square': ['square', 'square', 'square'],
-                    'dots': ['dots', 'dot', 'dot'],
-                    'rounded': ['rounded', 'extra-rounded', 'square'],
-                    'extra-rounded': ['extra-rounded', 'extra-rounded', 'square'],
-                    'classy': ['classy', 'classy', 'classy'],
-                    'classy-rounded': ['classy-rounded', 'classy-rounded', 'classy']
-                };
-                
-                config.dotsOptions.type = types[style][0];
-                config.cornersSquareOptions.type = types[style][1];
-                config.cornersDotOptions.type = types[style][2];
-            }
-            
-            // Download QR code
-            downloadBtn.addEventListener('click', function() {
-                if (qrCodeInstance) {
-                    // Download menggunakan resolusi render (500x500)
-                    qrCodeInstance.download({ 
-                        name: "qrcode-custom", 
-                        extension: "png" 
-                    });
-                }
-            });
-            
-            // Inisialisasi awal
-            updateGradientPreview();
-            updateQRText();
-        });
-    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrInput = document.getElementById('qr-input');
+            const textInput = document.getElementById('text-input');
+            const logoUpload = document.getElementById('logo-upload');
+            const downloadBtn = document.getElementById('download-btn');
+            const qrcodeDiv = document.getElementById('qrcode');
+            const qrTextDiv = document.getElementById('qr-text');
+            const logoPreview = document.getElementById('logo-preview');
+            const previewImage = document.getElementById('preview-image');
+            const styleOptions = document.querySelectorAll('.style-option');
+            const colorOptions = document.querySelectorAll('.color-option');
+            const customColorInput = document.getElementById('custom-color');
+            const colorPreview = document.getElementById('color-preview');
+            const applyCustomColorBtn = document.getElementById('apply-custom-color');
+            const gradientTypeOptions = document.querySelectorAll('.gradient-type');
+            const gradientColor1 = document.getElementById('gradient-color1');
+            const gradientColor2 = document.getElementById('gradient-color2');
+            const gradientPreview = document.getElementById('gradient-preview');
+            const applyGradientBtn = document.getElementById('apply-gradient');
+            const removeGradientBtn = document.getElementById('remove-gradient');
+            
+            let logoImage = null;
+            let selectedStyle = 'square';
+            let selectedColor = '#000000';
+            let selectedGradientType = 'linear';
+            let isUsingGradient = false;
+            let qrCodeInstance = null;
+            let updateTimeout = null;
+            
+            // Inisialisasi style options
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    styleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedStyle = this.getAttribute('data-type');
+                    updateQRCode();
+                });
+            });
+            
+            // Inisialisasi color options
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    colorOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedColor = this.getAttribute('data-color');
+                    isUsingGradient = false;
+                    updateQRCode();
+                });
+            });
+            
+            // Inisialisasi gradient type options
+            gradientTypeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    gradientTypeOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedGradientType = this.getAttribute('data-type');
+                    updateGradientPreview();
+                });
+            });
+            
+            // Set default selected style dan gradient type
+            document.querySelector('.style-option[data-type="square"]').classList.add('selected');
+            document.querySelector('.gradient-type[data-type="linear"]').classList.add('selected');
+            
+            // Update color preview
+            customColorInput.addEventListener('input', function() {
+                colorPreview.style.backgroundColor = this.value;
+            });
+            
+            // Apply custom color
+            applyCustomColorBtn.addEventListener('click', function() {
+                selectedColor = customColorInput.value;
+                isUsingGradient = false;
+                // Update selected color in preset options
+                colorOptions.forEach(opt => opt.classList.remove('selected'));
+                updateQRCode();
+            });
+            
+            // Update gradient preview
+            function updateGradientPreview() {
+                const color1 = gradientColor1.value;
+                const color2 = gradientColor2.value;
+                
+                if (selectedGradientType === 'linear') {
+                    gradientPreview.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
+                } else {
+                    gradientPreview.style.background = `radial-gradient(circle, ${color1}, ${color2})`;
+                }
+            }
+            
+            gradientColor1.addEventListener('input', updateGradientPreview);
+            gradientColor2.addEventListener('input', updateGradientPreview);
+            
+            // Apply gradient
+            applyGradientBtn.addEventListener('click', function() {
+                isUsingGradient = true;
+                updateQRCode();
+            });
+            
+            // Remove gradient
+            removeGradientBtn.addEventListener('click', function() {
+                isUsingGradient = false;
+                updateQRCode();
+            });
+            
+            // Handle input changes dengan debounce
+            qrInput.addEventListener('input', function() {
+                clearTimeout(updateTimeout);
+                updateTimeout = setTimeout(updateQRCode, 500);
+            });
+            
+            textInput.addEventListener('input', function() {
+                updateQRText();
+            });
+            
+            // Handle logo upload
+            logoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoImage = new Image();
+                        logoImage.src = event.target.result;
+                        previewImage.src = event.target.result;
+                        logoPreview.style.display = 'block';
+                        updateQRCode();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    logoPreview.style.display = 'none';
+                    logoImage = null;
+                    updateQRCode();
+                }
+            });
+            
+            // Update QR code text
+            function updateQRText() {
+                const text = textInput.value.trim();
+                if (text) {
+                    qrTextDiv.textContent = text;
+                    qrTextDiv.style.display = 'block';
+                } else {
+                    qrTextDiv.style.display = 'none';
+                }
+            }
+            
+            // Update QR code
+            function updateQRCode() {
+                const inputText = qrInput.value.trim();
+                
+                if (!inputText) {
+                    qrcodeDiv.innerHTML = `
+                        <div class="empty-state">
+                            <i>📱</i>
+                            <p>QR Code akan muncul di sini</p>
+                            <p>Masukkan teks atau URL untuk memulai</p>
+                        </div>
+                    `;
+                    downloadBtn.style.display = 'none';
+                    return;
+                }
+                
+                // Clear previous QR code
+                qrcodeDiv.innerHTML = '';
+                
+                // Tentukan ukuran berdasarkan lebar layar
+                const isMobile = window.innerWidth < 768;
+                const qrSize = isMobile ? 300 : 500;
+                
+                // Konfigurasi dasar QR code
+                const config = {
+                    width: qrSize,
+                    height: qrSize,
+                    data: inputText,
+                    margin: 10,
+                    qrOptions: {
+                        typeNumber: 0,
+                        mode: 'Byte',
+                        errorCorrectionLevel: 'H'
+                    },
+                    imageOptions: {
+                        hideBackgroundDots: true,
+                        imageSize: 0.3,
+                        margin: 5,
+                        imageCrossOrigin: 'anonymous',
+                        borderRadius: 15
+                    },
+                    dotsOptions: {
+                        color: selectedColor,
+                        type: 'square'
+                    },
+                    backgroundOptions: {
+                        color: '#ffffff'
+                    },
+                    cornersSquareOptions: {
+                        color: selectedColor,
+                        type: 'square'
+                    },
+                    cornersDotOptions: {
+                        color: selectedColor,
+                        type: 'square'
+                    }
+                };
+                
+                // Terapkan gradient jika dipilih
+                if (isUsingGradient) {
+                    const color1 = gradientColor1.value;
+                    const color2 = gradientColor2.value;
+                    
+                    if (selectedGradientType === 'linear') {
+                        config.dotsOptions.gradient = {
+                            type: 'linear',
+                            rotation: 0,
+                            colorStops: [
+                                { offset: 0, color: color1 },
+                                { offset: 1, color: color2 }
+                            ]
+                        };
+                    } else {
+                        config.dotsOptions.gradient = {
+                            type: 'radial',
+                            rotation: 0,
+                            colorStops: [
+                                { offset: 0, color: color1 },
+                                { offset: 1, color: color2 }
+                            ]
+                        };
+                    }
+                    
+                    // Juga terapkan ke corners
+                    config.cornersSquareOptions.gradient = config.dotsOptions.gradient;
+                    config.cornersDotOptions.gradient = config.dotsOptions.gradient;
+                }
+                
+                // Terapkan style yang dipilih
+                applyStyle(config, selectedStyle);
+                
+                // Tambahkan logo jika ada
+                if (logoImage) {
+                    config.image = logoImage.src;
+                }
+                
+                // Buat instance QR code
+                qrCodeInstance = new QRCodeStyling(config);
+                
+                // Render QR code
+                qrCodeInstance.append(qrcodeDiv);
+                
+                // Tampilkan tombol download
+                downloadBtn.style.display = 'block';
+                
+                // Update teks
+                updateQRText();
+            }
+            
+            // Fungsi untuk menerapkan style yang dipilih
+            function applyStyle(config, style) {
+                switch(style) {
+                    case 'dots':
+                        config.dotsOptions.type = 'dots';
+                        config.cornersSquareOptions.type = 'dot';
+                        config.cornersDotOptions.type = 'dot';
+                        break;
+                    case 'rounded':
+                        config.dotsOptions.type = 'rounded';
+                        config.cornersSquareOptions.type = 'extra-rounded';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                    case 'extra-rounded':
+                        config.dotsOptions.type = 'extra-rounded';
+                        config.cornersSquareOptions.type = 'extra-rounded';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                    case 'classy':
+                        config.dotsOptions.type = 'classy';
+                        config.cornersSquareOptions.type = 'classy';
+                        config.cornersDotOptions.type = 'classy';
+                        break;
+                    case 'classy-rounded':
+                        config.dotsOptions.type = 'classy-rounded';
+                        config.cornersSquareOptions.type = 'classy-rounded';
+                        config.cornersDotOptions.type = 'classy';
+                        break;
+                    default: // square
+                        config.dotsOptions.type = 'square';
+                        config.cornersSquareOptions.type = 'square';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                }
+            }
+            
+            // Download QR code
+            downloadBtn.addEventListener('click', function() {
+                if (qrCodeInstance) {
+                    qrCodeInstance.download({ 
+                        name: "qrcode-custom", 
+                        extension: "png" 
+                    });
+                }
+            });
+            
+            // Handle resize untuk responsive
+            window.addEventListener('resize', function() {
+                clearTimeout(updateTimeout);
+                updateTimeout = setTimeout(updateQRCode, 300);
+            });
+            
+            // Inisialisasi awal
+            updateGradientPreview();
+            updateQRText();
+        });
+    </script>
 </body>
 </html>
