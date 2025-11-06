@@ -1,106 +1,483 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile</title>
-    <link href="style.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Akaya+Kanadaka&family=Aleo:ital,wght@0,100..900;1,100..900&family=Amiri+Quran&family=Caveat:wght@400..700&family=Gowun+Dodum&family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Lexend+Deca:wght@100..900&family=Lilita+One&family=Manjari:wght@100;400;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>QR Code Generator dengan Style Kustom</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #2c5aa0;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .btn {
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #1e3d6f;
+        }
+
+        .btn:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+
+        .btn-download {
+            background-color: #2c5aa0;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .btn-download:hover {
+            background-color: #1e3d6f;
+        }
+
+        .qr-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        #qrcode {
+            display: none;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .logo-preview {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .logo-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-preview p {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .style-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .style-option:hover {
+            border-color: #2c5aa0;
+            background-color: #f0f5ff;
+        }
+
+        .style-option.selected {
+            border-color: #2c5aa0;
+            background-color: #e8f4ff;
+        }
+
+        .style-option img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .instructions {
+            background-color: #e8f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #2c5aa0;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 5px;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .style-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <!-- foto dan nama -->
-        <div class="image">
-            <div class="img">
-                   <img src="1.jpeg">   
-            </div>
-            <div class="other">
-                <hr class="horizontal">
-                <hr class="vertikal">
-                <div class="name">
-                    <h3>Ahmad Ulin Nuha</h3>
-                    <h5>Designer</h5>
-                </div>
-            </div>
-        </div>
-        <!-- identitas -->
-        <div class="box">
-            <!-- profile -->
-            <div class="profile">
-                <h4>PROFILE</h4>
-                <p>Ahmad Ulin Nuha adalah individu berkomitmen yang mengedepankan integritas dan profesionalisme. Berpengalaman di bidang manajemen dan pengembangan usaha, ia memiliki kemampuan analitis yang tajam dan semangat kolaboratif. Dengan visi untuk memberikan dampak positif, ia selalu berusaha mencapai hasil terbaik melalui dedikasi dan inovasi.</p>
-            </div>
-            <div class="experience">
-                <div class="edukasi">
-                    <h4>EDUKASI</h4>
-                    <div class="timeline-item">
-                        <p>
-                         <strong>
-                          Universitas Gadjah Mada (UGM)
-                         </strong>
-                         <br/>
-                         S1 Manajemen (2017–2021)
-                        </p>
-                       </div>
-                       <div class="timeline-item">
-                        <p>
-                         <strong>
-                          SMA Negeri 1 Madiun
-                         </strong>
-                         <br/>
-                         Jurusan IPA (2014–2017)
-                        </p>
-                       </div>
-                       <div class="timeline-item">
-                        <p>
-                         <strong>
-                          SMA Negeri 1 Madiun
-                         </strong>
-                         <br/>
-                         Jurusan IPA (2014–2017)
-                        </p>
-                       </div>
-                       <button class="more">Lihat Selengkapnya</button>
+        <header>
+            <h1>QR Code Generator dengan Style Kustom</h1>
+            <p class="description">Buat QR code dengan logo dan style yang dapat disesuaikan</p>
+        </header>
 
-                    </div>
-                <hr class="ver">
-                <div class="pengalaman">
-                    <h4>PENGALAMAN</h4>
-                    <div class="section-content">
-                        <div class="timeline">
-                         <div class="timeline-item">
-                          <p>
-                           <strong>
-                            Taruna Bumi Karya
-                           </strong>
-                           <br/>
-                           Manajer Pengembangan Usaha PT 2021–Sekarang
-                          </p>
-                         </div>
-                         <div class="timeline-item">
-                          <p>
-                           <strong>
-                            PT Mouson
-                           </strong>
-                           <br/>
-                           Asisten Manajer Pemasaran 2020–2021
-                          </p>
-                         </div>
-                         <button class="more">Lihat Selengkapnya</button>
+        <div class="input-section">
+            <div>
+                <div class="input-group">
+                    <label for="qr-input">Masukkan URL atau teks:</label>
+                    <input type="text" id="qr-input" placeholder="https://example.com atau teks apa saja">
+                </div>
+
+                <div class="input-group">
+                    <label for="logo-upload">Unggah logo (opsional):</label>
+                    <input type="file" id="logo-upload" accept="image/*">
+                </div>
+
+                <div class="input-group">
+                    <label>Pilih Style QR Code:</label>
+                    <div class="style-options">
+                        <div class="style-option" data-type="square">
+                            <div>Square</div>
                         </div>
+                        <div class="style-option" data-type="dots">
+                            <div>Dots</div>
+                        </div>
+                        <div class="style-option" data-type="rounded">
+                            <div>Rounded</div>
+                        </div>
+                        <div class="style-option" data-type="extra-rounded">
+                            <div>Extra Rounded</div>
+                        </div>
+                        <div class="style-option" data-type="classy">
+                            <div>Classy</div>
+                        </div>
+                        <div class="style-option" data-type="classy-rounded">
+                            <div>Classy Rounded</div>
+                        </div>
+                    </div>
                 </div>
+
+                <button id="generate-btn" class="btn">Buat QR Code</button>
             </div>
 
+            <div>
+                <div class="logo-preview" id="logo-preview">
+                    <p>Logo yang akan digunakan:</p>
+                    <img id="preview-image" src="" alt="Logo Preview">
+                </div>
+            </div>
         </div>
-                    <!-- alamat -->
-                    <div class="call">
-                        <i ><img src="phone-call.png" alt="" width="3%">0856-4633-7559</i>
-                        <i><img src="mail.png" alt="" width="3%">AhmadUlin@gmail.com</i>
-                        <i><img src="placeholder.png" alt="" width="3%">Jl. Raya Dungus, Mruwak, Dagangan, Madiun</i>
-                     </div>
+
+        <div class="qr-section">
+            <div id="qrcode"></div>
+            <button id="download-btn" class="btn btn-download">Download QR Code</button>
+        </div>
+
+        <div class="instructions">
+            <h3>Petunjuk Penggunaan:</h3>
+            <ul>
+                <li>Masukkan URL atau teks yang ingin diubah menjadi QR code</li>
+                <li>Pilih style QR code yang diinginkan</li>
+                <li>Unggah logo jika ingin menambahkannya di tengah QR code</li>
+                <li>Klik "Buat QR Code" untuk menghasilkan QR code</li>
+                <li>Gunakan tombol "Download QR Code" untuk menyimpan hasilnya</li>
+            </ul>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <footer>
+        <p>© 2023 QR Code Generator. Semua proses berjalan di browser Anda.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const qrInput = document.getElementById('qr-input');
+            const logoUpload = document.getElementById('logo-upload');
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const qrcodeDiv = document.getElementById('qrcode');
+            const logoPreview = document.getElementById('logo-preview');
+            const previewImage = document.getElementById('preview-image');
+            const styleOptions = document.querySelectorAll('.style-option');
+            
+            let logoImage = null;
+            let selectedStyle = 'square';
+            let qrCodeInstance = null;
+            
+            // Inisialisasi style options
+            styleOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    styleOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedStyle = this.getAttribute('data-type');
+                });
+            });
+            
+            // Set default selected style
+            document.querySelector('.style-option[data-type="square"]').classList.add('selected');
+            
+            // Handle logo upload
+            logoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        logoImage = new Image();
+                        logoImage.src = event.target.result;
+                        previewImage.src = event.target.result;
+                        logoPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    logoPreview.style.display = 'none';
+                    logoImage = null;
+                }
+            });
+            
+            // Generate QR code
+            generateBtn.addEventListener('click', function() {
+                const inputText = qrInput.value.trim();
+                
+                if (!inputText) {
+                    alert('Masukkan URL atau teks terlebih dahulu!');
+                    return;
+                }
+                
+                // Clear previous QR code
+                qrcodeDiv.innerHTML = '';
+                
+                // Konfigurasi dasar QR code
+                const config = {
+                    width: 300,
+                    height: 300,
+                    data: inputText,
+                    margin: 10,
+                    qrOptions: {
+                        typeNumber: 0,
+                        mode: 'Byte',
+                        errorCorrectionLevel: 'H'
+                    },
+                    imageOptions: {
+                        hideBackgroundDots: true,
+                        imageSize: 0.2,
+                        margin: 5
+                    },
+                    dotsOptions: {
+                        color: '#000000',
+                        type: 'square'
+                    },
+                    backgroundOptions: {
+                        color: '#ffffff'
+                    },
+                    cornersSquareOptions: {
+                        color: '#000000',
+                        type: 'square'
+                    },
+                    cornersDotOptions: {
+                        color: '#000000',
+                        type: 'square'
+                    }
+                };
+                
+                // Terapkan style yang dipilih
+                applyStyle(config, selectedStyle);
+                
+                // Buat instance QR code
+                qrCodeInstance = new QRCodeStyling(config);
+                
+                // Render QR code
+                qrCodeInstance.append(qrcodeDiv);
+                
+                // Tambahkan logo jika ada
+                if (logoImage) {
+                    logoImage.onload = function() {
+                        // Set logo ke QR code
+                        qrCodeInstance.update({
+                            image: logoImage.src
+                        });
+                        
+                        qrcodeDiv.style.display = 'block';
+                        downloadBtn.style.display = 'block';
+                    };
+                } else {
+                    qrcodeDiv.style.display = 'block';
+                    downloadBtn.style.display = 'block';
+                }
+            });
+            
+            // Fungsi untuk menerapkan style yang dipilih
+            function applyStyle(config, style) {
+                switch(style) {
+                    case 'dots':
+                        config.dotsOptions.type = 'dots';
+                        config.cornersSquareOptions.type = 'dot';
+                        config.cornersDotOptions.type = 'dot';
+                        break;
+                    case 'rounded':
+                        config.dotsOptions.type = 'rounded';
+                        config.cornersSquareOptions.type = 'extra-rounded';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                    case 'extra-rounded':
+                        config.dotsOptions.type = 'extra-rounded';
+                        config.cornersSquareOptions.type = 'extra-rounded';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                    case 'classy':
+                        config.dotsOptions.type = 'classy';
+                        config.cornersSquareOptions.type = 'classy';
+                        config.cornersDotOptions.type = 'classy';
+                        break;
+                    case 'classy-rounded':
+                        config.dotsOptions.type = 'classy-rounded';
+                        config.cornersSquareOptions.type = 'classy-rounded';
+                        config.cornersDotOptions.type = 'classy';
+                        break;
+                    default: // square
+                        config.dotsOptions.type = 'square';
+                        config.cornersSquareOptions.type = 'square';
+                        config.cornersDotOptions.type = 'square';
+                        break;
+                }
+            }
+            
+            // Download QR code
+            downloadBtn.addEventListener('click', function() {
+                if (qrCodeInstance) {
+                    qrCodeInstance.download({ 
+                        name: "qrcode-with-logo", 
+                        extension: "png" 
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
