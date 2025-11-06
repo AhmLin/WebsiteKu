@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
     <style>
+        /* CSS Styling */
         * {
             margin: 0;
             padding: 0;
@@ -168,7 +169,8 @@
         .logo-preview img {
             max-width: 100px;
             max-height: 100px;
-            border-radius: 6px;
+            /* Penyesuaian CSS untuk pratinjau logo */
+            border-radius: 12px; 
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
@@ -494,8 +496,10 @@
                     },
                     imageOptions: {
                         hideBackgroundDots: true,
-                        imageSize: 0.2,
-                        margin: 5
+                        imageSize: 0.35, // LOGO: Ditingkatkan ukurannya (35%)
+                        margin: 5,
+                        imageCrossOrigin: 'anonymous', 
+                        borderRadius: 20 // LOGO: Ditambahkan border radius 20px
                     },
                     dotsOptions: {
                         color: selectedColor,
@@ -575,7 +579,7 @@
             downloadBtn.addEventListener('click', function() {
                 if (qrCodeInstance) {
                     qrCodeInstance.download({ 
-                        name: "qrcode-with-logo", 
+                        name: "qrcode-custom", 
                         extension: "png" 
                     });
                 }
