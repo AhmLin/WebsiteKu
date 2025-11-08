@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembuat Short Link</title>
+    <title>Short Link Generator</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -31,13 +31,13 @@
         }
         
         h1 {
-            text-align: center;
             color: #333;
+            text-align: center;
             margin-bottom: 30px;
             font-weight: 600;
         }
         
-        .input-group {
+        .form-group {
             margin-bottom: 20px;
         }
         
@@ -48,31 +48,32 @@
             font-weight: 500;
         }
         
-        input[type="url"] {
+        input {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 16px;
             transition: border-color 0.3s;
         }
         
-        input[type="url"]:focus {
-            border-color: #667eea;
+        input:focus {
+            border-color: #6a11cb;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 12px 20px;
             font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
             font-weight: 500;
+            cursor: pointer;
             width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
         button:hover {
@@ -87,70 +88,40 @@
         .result {
             margin-top: 25px;
             padding: 15px;
-            border-radius: 8px;
             background-color: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
             display: none;
         }
         
-        .result.show {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-        
-        .short-url {
-            display: flex;
-            align-items: center;
+        .result h3 {
+            color: #333;
             margin-bottom: 10px;
         }
         
-        .short-url a {
-            flex-grow: 1;
-            color: #667eea;
-            text-decoration: none;
+        .result p {
+            color: #6a11cb;
+            font-weight: 500;
+            font-size: 18px;
             word-break: break-all;
-            padding: 8px 0;
+            margin-bottom: 15px;
         }
         
-        .copy-btn {
-            background: #28a745;
-            width: auto;
-            margin-left: 10px;
-            padding: 8px 15px;
-        }
-        
-        .copy-btn:hover {
-            background: #218838;
-        }
-        
-        .message {
+        .success-message {
+            color: #28a745;
+            font-weight: 500;
             margin-top: 10px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 14px;
-            display: none;
-        }
-        
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            display: block;
-        }
-        
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            display: block;
         }
         
         .loading {
             display: none;
             text-align: center;
-            margin: 10px 0;
+            margin-top: 20px;
         }
         
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #667eea;
+            border-left-color: #6a11cb;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -161,66 +132,26 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            color: #6c757d;
-            font-size: 14px;
-        }
-
-        .info {
-            background-color: #e7f3ff;
-            border-left: 4px solid #2196F3;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .method-selector {
-            margin-bottom: 15px;
-        }
-        
-        .method-selector label {
-            display: inline-block;
-            margin-right: 15px;
-            cursor: pointer;
-        }
-        
-        .method-selector input {
-            margin-right: 5px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Pembuat Short Link</h1>
+        <h1>Short Link Generator</h1>
         
-        <div class="info">
-            <strong>Penting:</strong> Gunakan metode GET jika POST tidak bekerja karena CORS
-        </div>
-        
-        <div class="method-selector">
-            <label>
-                <input type="radio" name="method" value="post" checked> Metode POST (Recommended)
-            </label>
-            <label>
-                <input type="radio" name="method" value="get"> Metode GET (Jika POST error)
-            </label>
-        </div>
-        
-        <div class="input-group">
-            <label for="url-input">Masukkan URL yang akan dipendekkan:</label>
-            <input type="url" id="url-input" placeholder="https://example.com" required>
-        </div>
-        
-        <button id="shorten-btn">Buat Short Link</button>
+        <form id="shortenForm">
+            <div class="form-group">
+                <label for="originalUrl">URL Asli:</label>
+                <input type="url" id="originalUrl" placeholder="https://example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="shortCode">Kode Pendek (opsional):</label>
+                <input type="text" id="shortCode" placeholder="contoh: mylink" maxlength="20">
+                <small style="color: #777;">Biarkan kosong untuk kode acak</small>
+            </div>
+            
+            <button type="submit">Generate Short Link</button>
+        </form>
         
         <div class="loading" id="loading">
             <div class="spinner"></div>
@@ -228,149 +159,71 @@
         </div>
         
         <div class="result" id="result">
-            <p><strong>Short Link Anda:</strong></p>
-            <div class="short-url">
-                <a href="#" id="short-url-link" target="_blank"></a>
-                <button class="copy-btn" id="copy-btn">Salin</button>
-            </div>
-            <div class="message" id="message"></div>
+            <h3>Short Link Anda:</h3>
+            <p id="shortLink"></p>
+            <p class="success-message">Link telah otomatis disalin ke clipboard!</p>
         </div>
-        
-        <footer>
-            <p>Sistem dibuat dengan Google Apps Script & GitHub Pages</p>
-        </footer>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlInput = document.getElementById('url-input');
-            const shortenBtn = document.getElementById('shorten-btn');
-            const resultDiv = document.getElementById('result');
-            const shortUrlLink = document.getElementById('short-url-link');
-            const copyBtn = document.getElementById('copy-btn');
-            const messageDiv = document.getElementById('message');
-            const loadingDiv = document.getElementById('loading');
-            const methodRadios = document.querySelectorAll('input[name="method"]');
+        // Ganti dengan URL Web Apps Script Anda
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLZKpovgxoTj3gaC_VonEqavYofsgj9i64IBy-xXg2PGedb4haDBnR5QSMYF9wx4La/exec';
+        
+        document.getElementById('shortenForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Ganti dengan URL Web App Anda
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbx5VuczR3Ha9Hl9Kb3xF9PXKxWa4KFpTNKa2IlFq-U84HsJ55-mGMwTrFFmsxZrAXN6/exec';
+            const originalUrl = document.getElementById('originalUrl').value;
+            const shortCode = document.getElementById('shortCode').value;
             
-            shortenBtn.addEventListener('click', createShortLink);
-            copyBtn.addEventListener('click', copyToClipboard);
-            
-            urlInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    createShortLink();
-                }
-            });
-            
-            async function createShortLink() {
-                const url = urlInput.value.trim();
-                const method = document.querySelector('input[name="method"]:checked').value;
-                
-                if (!url) {
-                    showMessage('Masukkan URL terlebih dahulu', 'error');
-                    return;
-                }
-                
-                try {
-                    new URL(url);
-                } catch (e) {
-                    showMessage('Format URL tidak valid', 'error');
-                    return;
-                }
-                
-                loadingDiv.style.display = 'block';
-                resultDiv.classList.remove('show');
-                messageDiv.className = 'message';
-                
-                try {
-                    let response;
-                    
-                    if (method === 'post') {
-                        // Metode POST
-                        response = await fetch(scriptUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ url: url })
-                        });
-                    } else {
-                        // Metode GET - encode URL untuk menghindari masalah parameter
-                        const encodedUrl = encodeURIComponent(url);
-                        response = await fetch(`${scriptUrl}?url=${encodedUrl}`);
-                    }
-                    
-                    const data = await response.json();
-                    loadingDiv.style.display = 'none';
-                    
-                    if (data.success) {
-                        shortUrlLink.textContent = data.shortUrl;
-                        shortUrlLink.href = data.shortUrl;
-                        resultDiv.classList.add('show');
-                        copyToClipboard();
-                    } else {
-                        showMessage(data.error || 'Terjadi kesalahan', 'error');
-                    }
-                } catch (error) {
-                    loadingDiv.style.display = 'none';
-                    
-                    if (method === 'post') {
-                        showMessage('POST gagal. Coba gunakan metode GET.', 'error');
-                        // Auto switch to GET method
-                        methodRadios[1].checked = true;
-                    } else {
-                        showMessage('Gagal terhubung ke server: ' + error.message, 'error');
-                    }
-                    console.error('Error:', error);
-                }
+            // Validasi URL dasar
+            if (!originalUrl) {
+                alert('URL asli harus diisi');
+                return;
             }
             
-            function copyToClipboard() {
-                const urlToCopy = shortUrlLink.textContent;
+            // Tampilkan loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `originalUrl=${encodeURIComponent(originalUrl)}&shortCode=${encodeURIComponent(shortCode)}`
+                });
                 
-                if (!urlToCopy) return;
+                const data = await response.json();
                 
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(urlToCopy)
-                        .then(() => {
-                            showMessage('Tautan berhasil disalin ke clipboard!', 'success');
-                        })
-                        .catch(err => {
-                            fallbackCopyTextToClipboard(urlToCopy);
-                        });
+                document.getElementById('loading').style.display = 'none';
+                
+                if (data.success) {
+                    const shortLink = data.shortUrl;
+                    document.getElementById('shortLink').textContent = shortLink;
+                    document.getElementById('result').style.display = 'block';
+                    
+                    // Salin ke clipboard
+                    try {
+                        await navigator.clipboard.writeText(shortLink);
+                        console.log('Link berhasil disalin ke clipboard');
+                    } catch (clipboardErr) {
+                        console.error('Gagal menyalin ke clipboard: ', clipboardErr);
+                        // Fallback untuk browser lama
+                        const textArea = document.createElement('textarea');
+                        textArea.value = shortLink;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                    }
                 } else {
-                    fallbackCopyTextToClipboard(urlToCopy);
+                    alert('Error: ' + data.error);
                 }
-            }
-            
-            function fallbackCopyTextToClipboard(text) {
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                try {
-                    const successful = document.execCommand('copy');
-                    if (successful) {
-                        showMessage('Tautan berhasil disalin ke clipboard!', 'success');
-                    } else {
-                        showMessage('Gagal menyalin tautan', 'error');
-                    }
-                } catch (err) {
-                    showMessage('Gagal menyalin tautan: ' + err, 'error');
-                }
-                
-                document.body.removeChild(textArea);
-            }
-            
-            function showMessage(text, type) {
-                messageDiv.textContent = text;
-                messageDiv.className = 'message ' + type;
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat membuat short link');
             }
         });
     </script>
