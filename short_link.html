@@ -1,163 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembuat Short Link Apps Script</title>
-    <!-- Memuat Tailwind CSS untuk styling modern dan responsif -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8; /* Warna latar belakang yang lebih lembut */
-        }
-        /* Style untuk tombol saat di-hover */
-        #submitButton:hover {
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pembuat Short Link</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #2b8a3e;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #237031;
+    }
+
+    .result {
+      margin-top: 15px;
+      background: #f1f3f4;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .link {
+      color: #1a73e8;
+      word-break: break-all;
+    }
+
+    .copy-btn {
+      background: #1a73e8;
+      border: none;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      background: #155fc4;
+    }
+
+  </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
+  <h1>Pembuat Short Link</h1>
+  <div class="card">
+    <label>Kode Short Link:</label>
+    <input type="text" id="kode" placeholder="contoh: yt" />
 
-    <!-- Variabel ini HARUS DIGANTI dengan URL Web App Apps Script Anda -->
-    <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxFNLgf2ucB9qojqUooAvu7qeK_KDu0Squso2f7R1IbMfPs-EcVf_BgmeNdyAap8pZX/exec"; // CONTOH: "https://script.google.com/macros/s/AKfycb..."
-    </script>
+    <label>URL Asli:</label>
+    <input type="url" id="url" placeholder="contoh: https://youtube.com" />
 
-    <div class="w-full max-w-lg bg-white p-8 md:p-10 shadow-2xl rounded-2xl border-t-4 border-indigo-600 transform hover:shadow-3xl transition duration-300">
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-2 text-center">
-            Pembuat Short Link
-        </h1>
-        <p class="text-center text-sm text-indigo-600 font-medium mb-8">
-            Apps Script & Google Sheets Backend
-        </p>
+    <button onclick="buatShortLink()">Buat Short Link</button>
 
-        <form id="shortLinkForm" class="space-y-6">
-            
-            <!-- Input Kode Pendek -->
-            <div>
-                <label for="kode" class="block text-sm font-semibold text-gray-700 mb-2">Kode Pendek</label>
-                <input type="text" id="kode" name="kode" required pattern="[a-zA-Z0-9-]+"
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-inner focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out placeholder-gray-400" 
-                       placeholder="Contoh: youtube, promo-januari">
-                <p class="text-xs text-gray-500 mt-1">Hanya huruf, angka, dan tanda hubung (-).</p>
-            </div>
+    <div id="result"></div>
+  </div>
 
-            <!-- Input URL Asli -->
-            <div>
-                <label for="url" class="block text-sm font-semibold text-gray-700 mb-2">URL Asli (Tujuan)</label>
-                <input type="url" id="url" name="url" required 
-                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-xl shadow-inner focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out placeholder-gray-400" 
-                       placeholder="https://">
-            </div>
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzlsbg3DhecATOfy0iKpwe5c4ZPzEqIR3dnXRid86M6TcTS6WXvU83gn_jPpw5vYDnG/exec"; // contoh: https://script.google.com/macros/s/AKfyc.../exec
 
-            <!-- Pesan Status -->
-            <div id="statusMessage" role="alert" class="p-4 rounded-xl hidden border-l-4">
-                <!-- Pesan akan ditampilkan di sini -->
-            </div>
+    async function buatShortLink() {
+      const kode = document.getElementById("kode").value.trim();
+      const url = document.getElementById("url").value.trim();
+      const resultDiv = document.getElementById("result");
 
-            <!-- Tombol Submit -->
-            <button type="submit" id="submitButton"
-                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-base font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-150 ease-in-out disabled:bg-indigo-400">
-                Tambah Link
-            </button>
-        </form>
-    </div>
+      if (!kode || !url) {
+        alert("Mohon isi kedua kolom!");
+        return;
+      }
 
-    <script>
-        const form = document.getElementById('shortLinkForm');
-        const statusMessage = document.getElementById('statusMessage');
-        const submitButton = document.getElementById('submitButton');
-
-        /**
-         * Menampilkan pesan status di area UI.
-         * @param {string} type 'success' atau 'error'
-         * @param {string} message Teks pesan yang akan ditampilkan
-         */
-        function displayStatus(type, message) {
-            statusMessage.textContent = message;
-            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-500', 
-                                              'bg-red-100', 'text-red-800', 'border-red-500');
-            
-            if (type === 'success') {
-                statusMessage.classList.add('bg-green-100', 'text-green-800', 'border-green-500');
-            } else {
-                statusMessage.classList.add('bg-red-100', 'text-red-800', 'border-red-500');
-            }
-        }
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Peringatan jika URL belum diganti
-            if (WEB_APP_URL === "GANTI_DENGAN_URL_APPS_SCRIPT_ANDA") {
-                displayStatus('error', '⚠️ ERROR: Harap ganti variabel WEB_APP_URL di dalam tag <script> pada file ini.');
-                return;
-            }
-
-            const kode = document.getElementById('kode').value.trim();
-            const url = document.getElementById('url').value.trim();
-            
-            // Validasi format kode di sisi klien
-            if (!/^[a-zA-Z0-9-]+$/.test(kode)) {
-                 displayStatus('error', '❌ Kode hanya boleh mengandung huruf, angka, dan tanda hubung (-).');
-                 return;
-            }
-
-            // Reset status message
-            statusMessage.classList.add('hidden');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Memproses...';
-
-            const payload = { kode, url };
-
-            try {
-                // Mengirim JSON tanpa header Content-Type untuk melewati CORS Preflight (solusi Apps Script)
-                const response = await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    body: JSON.stringify(payload)
-                });
-                
-                // Apps Script selalu merespons dengan status 200, jadi kita periksa isi JSON-nya
-                if (!response.ok) {
-                    throw new Error(`Permintaan HTTP gagal dengan status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.status === 'success') {
-                    const shortLink = `${WEB_APP_URL}?c=${kode}`;
-                    displayStatus('success', `✅ Berhasil! Link: ${shortLink}`);
-                    
-                    // Mengganti alert dengan pemberitahuan yang lebih informatif dan fungsi salin
-                    // NOTE: Fungsi window.confirm() digunakan untuk interaksi.
-                    if (window.confirm(`Link berhasil ditambahkan!\n\nLink Pendek Anda:\n${shortLink}\n\nKlik OK untuk menyalin link.`)) {
-                         // Menggunakan execCommand untuk menyalin teks (lebih kompatibel di iframe/lingkungan terbatas)
-                         const tempInput = document.createElement('input');
-                         document.body.appendChild(tempInput);
-                         tempInput.value = shortLink;
-                         tempInput.select();
-                         document.execCommand('copy');
-                         document.body.removeChild(tempInput);
-                         // Pemberitahuan salinan, karena alert tidak boleh digunakan (namun di sini masih menggunakan confirm, jadi ini hanya opsi)
-                         // displayStatus('success', '✅ Link berhasil disalin ke clipboard!');
-                    }
-                    form.reset();
-                } else {
-                    // Menangani pesan error dari backend
-                    displayStatus('error', `❌ Gagal: ${result.message}`);
-                }
-
-            } catch (error) {
-                console.error('Fetch Error:', error);
-                displayStatus('error', `⚠️ Terjadi kesalahan koneksi. Pastikan URL Apps Script benar dan sudah di-deploy: ${error.message}`);
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Tambah Link';
-            }
+      try {
+        const res = await fetch(WEB_APP_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ kode, url })
         });
-    </script>
+
+        const text = await res.text();
+
+        // Jika sukses, tampilkan link short
+        const shortLink = `${WEB_APP_URL}?c=${kode}`;
+        navigator.clipboard.writeText(shortLink);
+
+        resultDiv.innerHTML = `
+          <div class="result">
+            <span class="link" id="shortLink">${shortLink}</span>
+            <button class="copy-btn" onclick="copyLink()">Copy</button>
+          </div>
+          <small>Link otomatis disalin ke clipboard ✅</small>
+        `;
+      } catch (error) {
+        alert("Gagal membuat short link. Coba lagi.");
+      }
+    }
+
+    function copyLink() {
+      const linkText = document.getElementById("shortLink").textContent;
+      navigator.clipboard.writeText(linkText);
+      alert("Link berhasil disalin!");
+    }
+  </script>
 </body>
 </html>
