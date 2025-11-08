@@ -3,434 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short Link Manager</title>
+    <title>Pembuat Short Link</title>
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --success: #4cc9f0;
-            --error: #f72585;
-            --background: #f8f9fa;
-            --text: #2b2d42;
-            --text-light: #6c757d;
-            --white: #ffffff;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .container {
-            background: var(--white);
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            padding: 40px;
-            width: 100%;
-            max-width: 480px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-        }
-
-        h1 {
-            text-align: center;
-            color: var(--text);
-            margin-bottom: 8px;
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: var(--text-light);
-            margin-bottom: 32px;
-            font-size: 1rem;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--text);
-            font-size: 0.95rem;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: var(--background);
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-        }
-
-        button {
-            width: 100%;
-            background: var(--primary);
-            color: var(--white);
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            background: #adb5bd;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 12px;
-            display: none;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .success {
-            background: rgba(76, 201, 240, 0.1);
-            color: #0077b6;
-            border: 1px solid rgba(76, 201, 240, 0.3);
-        }
-
-        .error {
-            background: rgba(247, 37, 133, 0.1);
-            color: #b5179e;
-            border: 1px solid rgba(247, 37, 133, 0.3);
-        }
-
-        .short-url {
-            margin-top: 12px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            word-break: break-all;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 0.9rem;
-            border: 1px dashed #ccc;
-        }
-
-        .copy-btn {
-            background: var(--success);
-            margin-top: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
-            width: auto;
-        }
-
-        .copy-btn:hover {
-            background: #3aa8d4;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 16px 0;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 12px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .instructions {
-            margin-top: 32px;
-            padding: 20px;
-            background: var(--background);
-            border-radius: 12px;
-            font-size: 0.9rem;
-        }
-
-        .instructions h3 {
-            margin-bottom: 12px;
-            color: var(--text);
-            font-size: 1rem;
-        }
-
-        .instructions ol {
-            margin-left: 20px;
-        }
-
-        .instructions li {
-            margin-bottom: 8px;
-            color: var(--text-light);
-        }
-
-        .instructions code {
-            background: rgba(0, 0, 0, 0.05);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 24px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            input[type="text"] {
-                padding: 12px 14px;
-            }
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🔗 Short Link</h1>
-        <p class="subtitle">Buat dan kelola tautan pendek dengan mudah</p>
+<body class="min-h-screen flex items-center justify-center p-4">
 
-        <div class="form-group">
-            <label for="kode">Kode Pendek:</label>
-            <input type="text" id="kode" placeholder="Contoh: yt, ig, fb" maxlength="20">
-        </div>
+    <!-- Variabel ini HARUS DIGANTI dengan URL Web App Apps Script Anda -->
+    <script>
+        const WEB_APP_URL = "GANTI_DENGAN_URL_APPS_SCRIPT_ANDA"; // Contoh: "https://script.google.com/macros/s/AKfycb..."
+    </script>
 
-        <div class="form-group">
-            <label for="url">URL Asli:</label>
-            <input type="text" id="url" placeholder="Contoh: https://youtube.com">
-        </div>
+    <div class="w-full max-w-lg bg-white p-8 md:p-10 shadow-2xl rounded-xl border border-gray-100">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">
+            Pembuat Short Link
+        </h1>
+        <p class="text-center text-sm text-gray-500 mb-8">
+            Backend didukung oleh Google Apps Script dan Google Sheet.
+        </p>
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div> Memproses...
-        </div>
+        <form id="shortLinkForm" class="space-y-6">
+            
+            <!-- Input Kode Pendek -->
+            <div>
+                <label for="kode" class="block text-sm font-medium text-gray-700 mb-2">Kode Pendek (Misalnya: 'yt', 'blog')</label>
+                <input type="text" id="kode" name="kode" required 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out placeholder-gray-400" 
+                       placeholder="Masukkan kode unik">
+            </div>
 
-        <button onclick="tambahLink()" id="submitBtn">
-            <span>➕ Tambah Link</span>
-        </button>
+            <!-- Input URL Asli -->
+            <div>
+                <label for="url" class="block text-sm font-medium text-gray-700 mb-2">URL Asli (URL tujuan)</label>
+                <input type="url" id="url" name="url" required 
+                       class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out placeholder-gray-400" 
+                       placeholder="https://example.com/long-url-here">
+            </div>
 
-        <div id="result" class="result"></div>
+            <!-- Pesan Status -->
+            <div id="statusMessage" role="alert" class="p-4 rounded-lg hidden">
+                <!-- Pesan akan ditampilkan di sini -->
+            </div>
 
-        <div class="instructions">
-            <h3>📝 Cara Menggunakan:</h3>
-            <ol>
-                <li>Masukkan kode pendek (unik, maks 20 karakter)</li>
-                <li>Masukkan URL lengkap tujuan</li>
-                <li>Klik "Tambah Link"</li>
-                <li>Gunakan short link: <code id="webAppUrlExample">WEB_APP_URL?c=kode</code></li>
-            </ol>
-        </div>
+            <!-- Tombol Submit -->
+            <button type="submit" id="submitButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:bg-indigo-400">
+                Tambah Link
+            </button>
+        </form>
     </div>
 
     <script>
-        // 🔧 CONFIGURATION - GANTI URL INI SETELAH DEPLOY APPS SCRIPT
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz3it5sQwP3ZmKD4vvdeVpIe94tgnHpyo4UvvLhb7GBCnkyYj3ivraE9s7m6afum_HD/exec";
-        // Contoh: "https://script.google.com/macros/s/AKfycby.../exec"
+        const form = document.getElementById('shortLinkForm');
+        const statusMessage = document.getElementById('statusMessage');
+        const submitButton = document.getElementById('submitButton');
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update example URL in instructions
-            document.getElementById('webAppUrlExample').textContent = WEB_APP_URL + '?c=kode';
-        });
-
-        // Validate URL format
-        function isValidUrl(string) {
-            try {
-                new URL(string);
-                return true;
-            } catch (_) {
-                return false;
+        /**
+         * Menampilkan pesan status di area UI.
+         * @param {string} type 'success' atau 'error'
+         * @param {string} message Teks pesan yang akan ditampilkan
+         */
+        function displayStatus(type, message) {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            
+            if (type === 'success') {
+                statusMessage.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                statusMessage.classList.add('bg-red-100', 'text-red-800');
             }
         }
 
-        // Format URL
-        function formatUrl(url) {
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                return 'https://' + url;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Periksa placeholder URL
+            if (WEB_APP_URL === "https://script.google.com/macros/s/AKfycbwFH4mJcND9imxk6hsN-jmniQVYjTmQ0sDOnSdknaIvFl8e0vWG5xKO-2J0Vkh5aSyL/exec") {
+                displayStatus('error', 'ERROR: Harap ganti variabel WEB_APP_URL di dalam tag <script> dengan URL Web App Apps Script Anda.');
+                return;
             }
-            return url;
-        }
 
-        // Main function to add link
-        async function tambahLink() {
             const kode = document.getElementById('kode').value.trim();
             const url = document.getElementById('url').value.trim();
-            const resultDiv = document.getElementById('result');
-            const loadingDiv = document.getElementById('loading');
-            const submitBtn = document.getElementById('submitBtn');
+            
+            // Reset status message
+            statusMessage.classList.add('hidden');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Memproses...';
 
-            // Reset previous result
-            resultDiv.style.display = 'none';
-
-            // Validate input
-            if (!kode || !url) {
-                showResult('Harap isi kedua field kode dan URL!', 'error');
-                return;
-            }
-
-            // Validate code format (letters, numbers, underscore, dash)
-            if (!/^[a-zA-Z0-9_-]+$/.test(kode)) {
-                showResult('Kode hanya boleh berisi huruf, angka, underscore (_), dan dash (-)!', 'error');
-                return;
-            }
-
-            const formattedUrl = formatUrl(url);
-            if (!isValidUrl(formattedUrl)) {
-                showResult('Format URL tidak valid! Pastikan URL diawali dengan http:// atau https://', 'error');
-                return;
-            }
-
-            // Show loading
-            loadingDiv.style.display = 'block';
-            submitBtn.disabled = true;
+            const payload = { kode, url };
 
             try {
-                const data = {
-                    kode: kode,
-                    url: formattedUrl
-                };
-
                 const response = await fetch(WEB_APP_URL, {
                     method: 'POST',
+                    mode: 'cors', // Penting untuk Apps Script sebagai API
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(payload)
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`Permintaan HTTP gagal dengan status: ${response.status}`);
+                }
 
                 const result = await response.json();
-
+                
                 if (result.status === 'success') {
-                    showResult(
-                        `✅ ${result.message}<br>
-                        <div class="short-url">
-                            <strong>Short URL:</strong><br>
-                            ${result.data.shortUrl}
-                        </div>
-                        <button class="copy-btn" onclick="copyToClipboard('${result.data.shortUrl}')">📋 Copy URL</button>`,
-                        'success'
-                    );
-                    
-                    // Clear form
-                    document.getElementById('kode').value = '';
-                    document.getElementById('url').value = '';
+                    displayStatus('success', `✅ Link berhasil ditambahkan! Short link: ${WEB_APP_URL}?c=${kode}`);
+                    alert(`Link berhasil ditambahkan!\nShort link Anda: ${WEB_APP_URL}?c=${kode}`);
+                    form.reset();
                 } else {
-                    showResult(`❌ ${result.message}`, 'error');
+                    // Menangani pesan error dari backend (misalnya: Kode sudah terpakai)
+                    displayStatus('error', `❌ Gagal: ${result.message}`);
                 }
 
             } catch (error) {
-                console.error('Error:', error);
-                showResult('❌ Terjadi kesalahan: ' + error.message, 'error');
+                console.error('Fetch Error:', error);
+                displayStatus('error', `Terjadi kesalahan saat koneksi: ${error.message}. Cek URL Apps Script.`);
             } finally {
-                loadingDiv.style.display = 'none';
-                submitBtn.disabled = false;
-            }
-        }
-
-        // Show result message
-        function showResult(message, type) {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = message;
-            resultDiv.className = 'result ' + type;
-            resultDiv.style.display = 'block';
-
-            // Auto hide success messages after 8 seconds
-            if (type === 'success') {
-                setTimeout(() => {
-                    resultDiv.style.display = 'none';
-                }, 8000);
-            }
-        }
-
-        // Copy to clipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                alert('✅ URL berhasil disalin ke clipboard!');
-            }).catch(err => {
-                console.error('Gagal menyalin: ', err);
-                alert('❌ Gagal menyalin URL');
-            });
-        }
-
-        // Enter key support
-        document.getElementById('kode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('url').focus();
-            }
-        });
-
-        document.getElementById('url').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                tambahLink();
+                submitButton.disabled = false;
+                submitButton.textContent = 'Tambah Link';
             }
         });
     </script>
