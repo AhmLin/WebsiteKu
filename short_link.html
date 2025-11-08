@@ -173,11 +173,24 @@
             color: #6c757d;
             font-size: 14px;
         }
+
+        .info {
+            background-color: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Pembuat Short Link</h1>
+        
+        <div class="info">
+            <strong>Catatan:</strong> Pastikan Web App sudah di-deploy dengan akses "Anyone"
+        </div>
         
         <div class="input-group">
             <label for="url-input">Masukkan URL yang akan dipendekkan:</label>
@@ -228,7 +241,7 @@
                 }
             });
             
-            function createShortLink() {
+            async function createShortLink() {
                 const url = urlInput.value.trim();
                 
                 if (!url) {
@@ -249,16 +262,17 @@
                 resultDiv.classList.remove('show');
                 messageDiv.className = 'message';
                 
-                // Kirim request ke Apps Script
-                fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ url: url })
-                })
-                .then(response => response.json())
-                .then(data => {
+                try {
+                    // Kirim request ke Apps Script menggunakan pendekatan yang lebih kompatibel
+                    const response = await fetch(scriptUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ url: url })
+                    });
+                    
+                    const data = await response.json();
                     loadingDiv.style.display = 'none';
                     
                     if (data.success) {
@@ -272,16 +286,17 @@
                     } else {
                         showMessage(data.error || 'Terjadi kesalahan', 'error');
                     }
-                })
-                .catch(error => {
+                } catch (error) {
                     loadingDiv.style.display = 'none';
-                    showMessage('Gagal terhubung ke server: ' + error.message, 'error');
+                    showMessage('Gagal terhubung ke server. Pastikan Web App sudah di-deploy dengan akses "Anyone".', 'error');
                     console.error('Error:', error);
-                });
+                }
             }
             
             function copyToClipboard() {
                 const urlToCopy = shortUrlLink.textContent;
+                
+                if (!urlToCopy) return;
                 
                 // Gunakan Clipboard API jika tersedia
                 if (navigator.clipboard && window.isSecureContext) {
